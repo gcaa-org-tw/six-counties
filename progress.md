@@ -423,3 +423,4 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 未動、待 Joseph 決定：首頁統計盒仍顯示「候選人簽署共 N 位」與「看六都市長候選人簽署結果」按鈕，兩者都連到看板；看板現在只剩公告，若試算表在 9/28 前已有簽署資料，首頁會先透露數字。若要一致，可暫時把首頁的候選人數字也改成公告或隱藏。
 - 驗證（2026-09-15）：`npm ci` 後 `tsc --noEmit`、vitest 13 檔 86 項（新增 `SignBoard.test.tsx` 2 項、site.test 加 boardNotice 斷言）、`npm run build`、`git diff --check` 通過。尚未提交、推送或部署。
 - Joseph 決定：首頁統計盒先顯示「候選人簽署共 ？ 位」。`App.tsx` 把 signedCount 固定為「？」，原本從試算表計算的邏輯註解保留；Hero 的 count 型別放寬為 number | string | null。Hero.test 加一項。vitest 13 檔 87 項、tsc、build、diff --check 通過。
+- 發布：提交 `3cde176` 已推送至 `main`，GitHub Actions `34920501064` 成功（2026-09-15 02:16 UTC）。公開網址 https://litostswirrl.github.io/six-counties/ 的 JS `index-DaxqPiG9.js` 與本機 dist md5 相同（148bee2c…），內含截止公告、不含「依縣市篩選」。
