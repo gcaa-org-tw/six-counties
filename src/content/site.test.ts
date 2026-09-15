@@ -35,6 +35,7 @@ describe('網站固定文案與連署入口', () => {
     expect(SITE.demandsLead[1][0]).toContain('針對六都市長選舉');
     expect(SITE.demandsLead[2][1]).toBe('成為安全、宜居且具韌性的永續城市。');
     expect(SITE.boardLead).toBe('我們邀請六都市長候選人回應五大訴求，以下是各候選人簽署政策承諾情形，供選民參考。');
+    expect(SITE.boardNotice).toBe('候選人簽署至 9/28 截止，完整簽署結果將於截止後公開。');
   });
 
   it('首頁統計盒標籤與入口', () => {

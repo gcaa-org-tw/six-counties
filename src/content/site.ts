@@ -53,6 +53,7 @@ export const SITE = {
   ],
   joinCta: '加入連署',
   boardLead: '我們邀請六都市長候選人回應五大訴求，以下是各候選人簽署政策承諾情形，供選民參考。',
+  boardNotice: '候選人簽署至 9/28 截止，完整簽署結果將於截止後公開。',
   endorsementLabel: '連署團體',
   sections: {
     whySix: { id: 'why-six', nav: '六都現況', title: '六都現況' },

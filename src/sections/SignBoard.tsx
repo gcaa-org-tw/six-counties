@@ -1,3 +1,28 @@
+import type { Candidate } from '../data/types';
+import { SITE } from '../content/site';
+
+interface SignBoardProps {
+  state: 'loading' | 'error' | 'empty' | 'ready';
+  candidates: Candidate[];
+  onRetry: () => void;
+}
+
+export default function SignBoard(_props: SignBoardProps) {
+  return (
+    <section id={SITE.sections.board.id} className="py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <h2 className="text-center font-display text-3xl tracking-[0.2em] text-ink md:text-4xl">
+          {SITE.sections.board.title}
+        </h2>
+        <p className="mx-auto mt-8 max-w-2xl rounded-3xl border border-ink/10 bg-white/70 px-6 py-12 text-center text-base leading-7 text-ink/75">
+          {SITE.boardNotice}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/*
 import { useState } from 'react';
 import type { Candidate } from '../data/types';
 import { SITE } from '../content/site';
@@ -102,3 +127,4 @@ export default function SignBoard({ state, candidates, onRetry }: SignBoardProps
     </section>
   );
 }
+*/

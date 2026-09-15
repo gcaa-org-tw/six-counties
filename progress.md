@@ -415,3 +415,11 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 ## Phase 34 加入連署區按鈕文字改回「加入連署」（2026-09-09）
 - Joseph 指示：「連署影響力 文字 改回 加入連署」。只改 `src/content/site.ts` 的 joinCta 與 site.test 對應斷言；右上角導覽列按鈕本來就是「加入連署」，不動。
 - 發布：提交 `f2675d7` 已推送至 `main`，GitHub Actions `34305783597` 成功；公開網址 JS `index-Co8bAL_C.js` 與本機 dist 一致，內容已無「連署影響力」。
+
+## Phase 35 候選人簽署看板改為截止公告（2026-09-15）
+- Joseph 指示：導覽列的「候選人承諾」連結保留；看板本體先改成一句公告「候選人簽署至 9/28 截止，完整簽署結果將於截止後公開。」；原有設計註解保留，不刪。
+- 做法：`SignBoard.tsx` 改成只渲染區塊 id、標題與公告；原本整份檔案（縣市篩選、骨架卡、四種狀態、候選人卡片）放在檔尾的區塊註解裡，日後解除註解、刪掉上面的精簡版即可還原。props 介面照舊，`App.tsx` 的接線不動（首頁統計盒仍要用同一份試算表資料）。公告文字放 `site.ts` 的 `boardNotice`，`boardLead` 留著給還原用。
+- 副作用：CandidateCard 沒有其他引用，正式建置會被 tree-shake 掉，dist JS 已不含「依縣市篩選」。
+- 未動、待 Joseph 決定：首頁統計盒仍顯示「候選人簽署共 N 位」與「看六都市長候選人簽署結果」按鈕，兩者都連到看板；看板現在只剩公告，若試算表在 9/28 前已有簽署資料，首頁會先透露數字。若要一致，可暫時把首頁的候選人數字也改成公告或隱藏。
+- 驗證（2026-09-15）：`npm ci` 後 `tsc --noEmit`、vitest 13 檔 86 項（新增 `SignBoard.test.tsx` 2 項、site.test 加 boardNotice 斷言）、`npm run build`、`git diff --check` 通過。尚未提交、推送或部署。
+- Joseph 決定：首頁統計盒先顯示「候選人簽署共 ？ 位」。`App.tsx` 把 signedCount 固定為「？」，原本從試算表計算的邏輯註解保留；Hero 的 count 型別放寬為 number | string | null。Hero.test 加一項。vitest 13 檔 87 項、tsc、build、diff --check 通過。

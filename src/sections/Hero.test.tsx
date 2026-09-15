@@ -28,6 +28,11 @@ describe('首頁統計盒', () => {
     expect(markup).toContain('&gt;&gt; 看團體連署名單');
   });
 
+  it('9/28 截止前候選人數量顯示為問號', () => {
+    const placeholder = renderToStaticMarkup(<Hero signedCount="？" groupCount={6} />);
+    expect(placeholder).toContain('>？</span>');
+  });
+
   it('標題把六都市長候選人納入 h1，並使用簽名圖示', () => {
     expect(markup).toMatch(/<h1[^>]*>[\s\S]*六都市長候選人[\s\S]*永續韌性城市[\s\S]*政策承諾[\s\S]*<\/h1>/);
     expect(markup).toContain('alt="簽名圖示"');
