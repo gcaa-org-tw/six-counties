@@ -1,7 +1,7 @@
 import type { NewsItem } from './news';
 
 const KINDS: NewsItem['kind'][] = ['新聞稿', '投書', '活動'];
-const IMAGE = '/six-counties/images/news/20260812-press-conference.webp';
+const IMAGE = `${import.meta.env.BASE_URL}images/news/20260812-press-conference.webp`;
 
 export function mockNews(count: number): NewsItem[] {
   return Array.from({ length: count }, (_, i) => {

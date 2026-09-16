@@ -75,8 +75,8 @@ describe('網站固定文案與連署入口', () => {
 
   it('提供日間與夜間天際線圖檔', () => {
     expect(CITY_SKYLINE_URLS).toEqual({
-      day: '/six-counties/images/city-skyline.webp',
-      night: '/six-counties/images/city-skyline-night.webp',
+      day: `${import.meta.env.BASE_URL}images/city-skyline.webp`,
+      night: `${import.meta.env.BASE_URL}images/city-skyline-night.webp`,
     });
   });
 });

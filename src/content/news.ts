@@ -16,7 +16,7 @@ export const NEWS: NewsItem[] = [
     summary:
       '九個公民團體共同發布「六都市長候選人永續韌性城市政策承諾」，提出再生能源與產業永續轉型、防災韌性與民生保障、高溫調適與健康安全、水患治理轉型及永續交通轉型五大政策面向，邀請六都市長候選人簽署。',
     href: 'https://gcaa.org.tw/16551/',
-    image: '/six-counties/images/news/20260812-press-conference.webp',
+    image: `${import.meta.env.BASE_URL}images/news/20260812-press-conference.webp`,
     imageAlt: '九個公民團體代表在記者會合照',
   },
 ];

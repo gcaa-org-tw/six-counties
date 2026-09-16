@@ -424,3 +424,11 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 驗證（2026-09-15）：`npm ci` 後 `tsc --noEmit`、vitest 13 檔 86 項（新增 `SignBoard.test.tsx` 2 項、site.test 加 boardNotice 斷言）、`npm run build`、`git diff --check` 通過。尚未提交、推送或部署。
 - Joseph 決定：首頁統計盒先顯示「候選人簽署共 ？ 位」。`App.tsx` 把 signedCount 固定為「？」，原本從試算表計算的邏輯註解保留；Hero 的 count 型別放寬為 number | string | null。Hero.test 加一項。vitest 13 檔 87 項、tsc、build、diff --check 通過。
 - 發布：提交 `3cde176` 已推送至 `main`，GitHub Actions `34920501064` 成功（2026-09-15 02:16 UTC）。公開網址 https://litostswirrl.github.io/six-counties/ 的 JS `index-DaxqPiG9.js` 與本機 dist md5 相同（148bee2c…），內含截止公告、不含「依縣市篩選」。
+
+## Phase 36 網站搬到 gcaa.org.tw 子網域（2026-09-16）
+- Joseph 指示：不搬 Firebase，留在 GitHub Pages，改掛 gcaa.org.tw 子網域；名稱選定 `sixcounties.gcaa.org.tw`。
+- 事前查證：GitHub Pages 設好自訂網域後，舊網址會自動 301 轉到新網址且保留路徑（以 twbs.github.io/bootstrap/ 實測，轉到 getbootstrap.com 同路徑）。gcaa.org.tw 的 DNS 由自家 ns.gcaa.org.tw 管，紀錄要請 GCAA 網域管理者加。repo 的 Pages 設定可用 `gh api`（LitostSwirrl 帳號）操作。
+- 順序（不能顛倒，否則公開站會先斷）：(1) 管理者加 CNAME `sixcounties` → `litostswirrl.github.io`；(2) `dig sixcounties.gcaa.org.tw` 解析到 github.io 後，同一次完成：Pages 設定 cname、`vite.config.ts` base 改 `'/'`、推送部署；(3) GitHub 簽好憑證後開 Enforce HTTPS；(4) 驗證新網址與舊網址轉址。
+- 先做的準備：src 裡五處圖片路徑原本寫死 `/six-counties/images/...`（site.ts 兩處、news.ts、newsMock.ts、Hero.tsx），改成 `import.meta.env.BASE_URL` 前綴，對應的 site.test 與 News.test 一起改。這步不依賴 DNS，現在部署後產出與原本相同，之後只需改 base 一行。
+- 給管理者的 DNS 申請文字已 pbcopy。
+- 驗證（2026-09-16）：`tsc --noEmit`、vitest 13 檔 87 項、`npm run build`、`git diff --check` 通過。建置出的 `index-DaxqPiG9.js` 與 phase 35 上線版檔名相同，代表這次改動對正式站零影響。另把 base 暫改 `'/'` 排練：87 項測試仍通過，dist 內四個圖片路徑全部變成 `/images/...`、index.html 的 JS 路徑為 `/assets/...`；排練完已還原 base。

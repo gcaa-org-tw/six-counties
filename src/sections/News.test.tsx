@@ -25,7 +25,7 @@ describe('最新消息', () => {
     expect(markup).toContain('>重新載入<');
     expect(NEWS.length).toBeGreaterThan(0);
     expect(markup).toContain('href="https://gcaa.org.tw/16551/"');
-    expect(markup).toContain('src="/six-counties/images/news/20260812-press-conference.webp"');
+    expect(markup).toContain(`src="${import.meta.env.BASE_URL}images/news/20260812-press-conference.webp"`);
     expect(markup).toContain('新聞稿');
     expect(markup).toContain('dateTime="2026-08-12"');
     expect(markup).toContain('【聯合新聞稿】六都市長候選人永續韌性城市政策承諾訴求發布');
