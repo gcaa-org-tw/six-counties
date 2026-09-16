@@ -440,3 +440,6 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
   3. `vite.config.ts` 的 base 改 `'/'`，跑 tsc、vitest、build，確認 dist 圖片路徑為 `/images/...`，提交推送
   4. 等 `gh api repos/LitostSwirrl/six-counties/pages` 的 `https_certificate.state` 變 `approved` 後 `gh api -X PUT repos/LitostSwirrl/six-counties/pages -F https_enforced=true`
   5. 驗證：新網址 1200px／390px 畫面、四張圖片載入；`curl -sI https://litostswirrl.github.io/six-counties/` 回 301 到新網址；`#join` 錨點跳轉正常
+- 改向（2026-09-16）：Joseph 認為網站是九個團體共同的，掛在 gcaa.org.tw 下不妥；Firebase 也考慮過（預設網址仍帶 .web.app，免費方案每日 360 MB 流量上限，約 300 到 400 次首次造訪就會斷站），最後決定改用中立的 GitHub 組織 `six-counties-2026`，網址 `https://six-counties-2026.github.io/`。不涉及任何 DNS 紀錄；先前 pbcopy 的 DNS 申請文字作廢，不要寄。
+- 名稱查證：`gh api users/six-counties-2026` 回 404，名稱可用。
+- 做法（避免舊網址斷線）：不用 transfer（GitHub 文件說轉移不會轉址 Pages）。改為 (1) Joseph 在瀏覽器建組織（API 只開放企業方案建組織）；(2) 在組織下建 `six-counties-2026.github.io` repo，把本 repo 推上去，base 改 `'/'`，用同一份 Actions 部署，驗證新網址；(3) 舊 repo `LitostSwirrl/six-counties` 的 main 換成一頁轉址 stub（meta refresh 加 JS，保留 hash 錨點），部署後封存；(4) 本機 remote 改指向新 repo。
