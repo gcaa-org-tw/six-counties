@@ -450,3 +450,10 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 本機 remote 已改為 gcaa-org-tw；repo 內 README／docs 沒有寫死 litostswirrl 網址。README 第 28 行提到掛 gcaa.org.tw 子網域的做法已不適用，未改。
 - Joseph 決定（2026-09-16）：在 gcaa-org-tw 之上再掛 `sixcounties.gcaa.org.tw`。DNS 申請文字已重新 pbcopy，CNAME 目標改為 `gcaa-org-tw.github.io`（不是先前的 litostswirrl）。
 - 切換步驟改為：(1) `dig +short sixcounties.gcaa.org.tw` 應回 `gcaa-org-tw.github.io.`；(2) `gh api -X PUT repos/gcaa-org-tw/six-counties/pages -f cname=sixcounties.gcaa.org.tw`；(3) base 改 `'/'`，tsc、vitest、build，確認 dist 圖片路徑 `/images/...`，提交推送；(4) 憑證 approved 後 `-F https_enforced=true`；(5) 驗證新網址、`gcaa-org-tw.github.io/six-counties/` 回 301 且保留路徑；(6) 把 `LitostSwirrl/six-counties` stub 的目標改成新網址，少走一跳。
+- 再改向（2026-09-16）：Joseph 決定網址用 `six-cities.gcaa.org.tw`（訊息寫成 six-cities@gcaa.org.tw，@ 視為 . 的筆誤），並提供 GCAA 主機與網域的登入資料，要我直接操作介面。登入資料只在對話裡，不寫進任何檔案。
+- DNS 在哪：`ns.gcaa.org.tw` 就是 PUMO 的 Plesk 主機 linplesk43（124.150.132.83），zone 由 Plesk「DNS 設定」管理；zone 內原本就有 `thaubing-esg`、`data.thaubing-esg` 兩筆 CNAME 指向 `gcaa-org-tw.github.io`，以及 GitHub 組織網域驗證的 `_gh-gcaa-org-tw-o` TXT。用 chrome-devtools 登入 Plesk，新增 CNAME `six-cities` → `gcaa-org-tw.github.io`、TTL 3600，按「更新」套用（Plesk 新增後要另外按更新才會寫進 zone），完成後登出。權威伺服器與 8.8.8.8 立即解析到 GitHub 四個 185.199.x.x IP。
+- GitHub 端：`gh api -X PUT repos/gcaa-org-tw/six-counties/pages -f cname=six-cities.gcaa.org.tw`；`vite.config.ts` base 改 `'/'`（tsc、vitest 87 項、build 通過，dist 圖片路徑 `/images/...`、JS `/assets/index-acUvRcRu.js`），提交 `f0dbba3`，Actions `35056262880` 成功；憑證幾分鐘內 approved（Let's Encrypt，到期 2026-12-15），隨即 `https_enforced=true`，約一分鐘後 http 回 301 到 https。
+- 舊網址：`gcaa-org-tw.github.io/six-counties/` 由 GitHub 自動 301 到新網域，路徑與 query 保留；`LitostSwirrl/six-counties` stub 改為直接指向新網域（少走一跳）。Playwright 實測 `litostswirrl.github.io/six-counties/?rev=final#join` 落在 `six-cities.gcaa.org.tw/?rev=final#join`。
+- 切換後 10 分鐘內的假象：瀏覽器開 `gcaa-org-tw.github.io/six-counties/` 仍看到舊頁而且 JS 404。查證是 GitHub CDN（Fastly）對 gzip 變體還留著舊建置的 200（cache-control max-age=600、age 550），curl 不帶 Accept-Encoding 的變體早已是 301。等到期後所有變體都回 301，用隔離的乾淨瀏覽器 context 重測正常。不是程式問題，記下來免得下次白查。
+- README 第 28 行的部署段落改成現況。
+- 驗證清單（2026-09-16）：新網址首頁 200、標題正確、JS 與四張圖片 200；http→https 301；舊兩個網址都到新網址且保留 `?rev` 與 `#join`；Plesk 已登出。

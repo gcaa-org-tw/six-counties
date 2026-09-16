@@ -25,7 +25,7 @@ npm run test     跑測試
 
 ## 部署
 
-push 到 main 後由 GitHub Actions 自動建置並部署到 GitHub Pages。要掛 gcaa.org.tw 子網域時：在 repo Settings → Pages 設定 custom domain，並請網域管理者加一筆 CNAME 記錄；同時把 `vite.config.ts` 的 `base` 改為 `'/'`。
+push 到 main 後由 GitHub Actions 自動建置並部署到 GitHub Pages，公開網址 https://six-cities.gcaa.org.tw/ 。網域的 CNAME 記錄（six-cities → gcaa-org-tw.github.io）在 gcaa.org.tw 的 Plesk DNS 設定裡；repo Settings → Pages 已設 custom domain 並強制 HTTPS。舊網址 https://litostswirrl.github.io/six-counties/ 由同名 stub repo 轉址，https://gcaa-org-tw.github.io/six-counties/ 由 GitHub 自動 301。
 
 ## 授權
 
