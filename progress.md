@@ -443,3 +443,8 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 改向（2026-09-16）：Joseph 認為網站是九個團體共同的，掛在 gcaa.org.tw 下不妥；Firebase 也考慮過（預設網址仍帶 .web.app，免費方案每日 360 MB 流量上限，約 300 到 400 次首次造訪就會斷站），最後決定改用中立的 GitHub 組織 `six-counties-2026`，網址 `https://six-counties-2026.github.io/`。不涉及任何 DNS 紀錄；先前 pbcopy 的 DNS 申請文字作廢，不要寄。
 - 名稱查證：`gh api users/six-counties-2026` 回 404，名稱可用。
 - 做法（避免舊網址斷線）：不用 transfer（GitHub 文件說轉移不會轉址 Pages）。改為 (1) Joseph 在瀏覽器建組織（API 只開放企業方案建組織）；(2) 在組織下建 `six-counties-2026.github.io` repo，把本 repo 推上去，base 改 `'/'`，用同一份 Actions 部署，驗證新網址；(3) 舊 repo `LitostSwirrl/six-counties` 的 main 換成一頁轉址 stub（meta refresh 加 JS，保留 hash 錨點），部署後封存；(4) 本機 remote 改指向新 repo。
+- 再改向（2026-09-16）：Joseph 指示 repo 整個搬到 GCAA。GitHub 上的 GCAA 組織是 `gcaa-org-tw`（LitostSwirrl 為 admin），已用 `gh api repos/LitostSwirrl/six-counties/transfer` 轉移，新 repo `gcaa-org-tw/six-counties`，Pages 設定（workflow 建置、強制 HTTPS）隨 repo 帶過去。網址路徑 `/six-counties/` 不變，只有主機名變，`vite.config.ts` base 不必動，圖片路徑改 BASE_URL 那步順便保險。
+- 新公開網址：https://gcaa-org-tw.github.io/six-counties/ 。手動觸發 Actions `35050838907` 成功；curl 確認首頁 200、JS 仍為 `index-DaxqPiG9.js`、四張圖片 200。
+- 舊網址轉址：GitHub 轉移 repo 不會轉址 Pages，所以在 `LitostSwirrl/six-counties` 原名新建一個只放 index.html／404.html 的 stub repo（meta refresh 加 JS，保留路徑、query 與 hash；robots noindex），branch 部署。Playwright 實測 `litostswirrl.github.io/six-counties/?rev=test#join` 落在 `gcaa-org-tw.github.io/six-counties/?rev=test#join`，標題正確；深層路徑走 404.html 一樣轉。
+- 順帶觀察（非本次範圍、遷移前就如此）：帶 `#join` 直接開新網址時 scrollY 仍為 0，錨點沒有在載入時捲到連署區；導覽列點擊的捲動不受影響。
+- 本機 remote 已改為 gcaa-org-tw；repo 內 README／docs 沒有寫死 litostswirrl 網址。README 第 28 行提到掛 gcaa.org.tw 子網域的做法已不適用，未改。
