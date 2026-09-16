@@ -448,3 +448,5 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 舊網址轉址：GitHub 轉移 repo 不會轉址 Pages，所以在 `LitostSwirrl/six-counties` 原名新建一個只放 index.html／404.html 的 stub repo（meta refresh 加 JS，保留路徑、query 與 hash；robots noindex），branch 部署。Playwright 實測 `litostswirrl.github.io/six-counties/?rev=test#join` 落在 `gcaa-org-tw.github.io/six-counties/?rev=test#join`，標題正確；深層路徑走 404.html 一樣轉。
 - 順帶觀察（非本次範圍、遷移前就如此）：帶 `#join` 直接開新網址時 scrollY 仍為 0，錨點沒有在載入時捲到連署區；導覽列點擊的捲動不受影響。
 - 本機 remote 已改為 gcaa-org-tw；repo 內 README／docs 沒有寫死 litostswirrl 網址。README 第 28 行提到掛 gcaa.org.tw 子網域的做法已不適用，未改。
+- Joseph 決定（2026-09-16）：在 gcaa-org-tw 之上再掛 `sixcounties.gcaa.org.tw`。DNS 申請文字已重新 pbcopy，CNAME 目標改為 `gcaa-org-tw.github.io`（不是先前的 litostswirrl）。
+- 切換步驟改為：(1) `dig +short sixcounties.gcaa.org.tw` 應回 `gcaa-org-tw.github.io.`；(2) `gh api -X PUT repos/gcaa-org-tw/six-counties/pages -f cname=sixcounties.gcaa.org.tw`；(3) base 改 `'/'`，tsc、vitest、build，確認 dist 圖片路徑 `/images/...`，提交推送；(4) 憑證 approved 後 `-F https_enforced=true`；(5) 驗證新網址、`gcaa-org-tw.github.io/six-counties/` 回 301 且保留路徑；(6) 把 `LitostSwirrl/six-counties` stub 的目標改成新網址，少走一跳。
