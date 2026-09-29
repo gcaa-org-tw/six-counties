@@ -15,13 +15,13 @@ import {
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 interface HeroProps {
-  signedCount: number | string | null;
+  signedCount: number | null;
   groupCount: number | null;
 }
 
 interface StatChipProps {
   label: string;
-  count: number | string | null;
+  count: number | null;
   unit: string;
   actionLabel: string;
   actionHref: string;

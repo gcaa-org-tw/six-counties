@@ -28,13 +28,10 @@ export default function App() {
       .catch(() => setStatsFailed(true));
   }, []);
 
-  const signedCount = '？';
-  /*
   const signedCount =
     candidates.state === 'ready' || candidates.state === 'empty'
       ? candidates.data.filter((c) => c.status === 'signed' || c.status === 'partial').length
       : null;
-  */
 
   const groupsState = statsFailed
     ? 'error'

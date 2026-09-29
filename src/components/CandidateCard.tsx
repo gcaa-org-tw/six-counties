@@ -35,6 +35,7 @@ function CheckGlyph({ checked }: { checked: boolean }) {
 
 export default function CandidateCard({ candidate }: CandidateCardProps) {
   const [open, setOpen] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
   let flatIndex = 0;
 
   return (
@@ -51,8 +52,13 @@ export default function CandidateCard({ candidate }: CandidateCardProps) {
         onClick={() => setOpen((prev) => !prev)}
       >
         <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border border-ink/10">
-          {candidate.photoUrl ? (
-            <img src={candidate.photoUrl} alt={`${candidate.name}照片`} className="h-full w-full object-cover" />
+          {candidate.photoUrl && !photoFailed ? (
+            <img
+              src={candidate.photoUrl}
+              alt={`${candidate.name}照片`}
+              className="h-full w-full object-cover"
+              onError={() => setPhotoFailed(true)}
+            />
           ) : (
             <Silhouette />
           )}
