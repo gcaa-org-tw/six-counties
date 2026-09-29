@@ -469,3 +469,37 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
   - 謝龍介：狀態「未回應」，勾 14 項、簽署日期 2026-09-18。標章顯示「尚未回應」，展開卻有日期與勾選。
   - 柯志恩：狀態「未回應」，18 項全勾、簽署日期 2026-09-17。同上。
 - 發布：已在本機提交，尚未推送，等資料確認。
+- Joseph 決定（2026-09-29）：先推送，資料矛盾由同事在試算表修正後自動更新。推送前 Joseph 追加照片要求：優先用中選會照片。
+- 中選會照片查證：115 年選舉工作進行程序表第 14 項，收錄相片的選舉公報 11 月 12 日前編印完成，投票日 2 日前送達並放上選委會網站；第 15 項直轄市長候選人名單 11 月 12 日公告。現在沒有中選會照片可用。
+- Joseph 改指示：中選會沒有，就找 Facebook 或其他社群的官方照片。
+- 做法：Facebook 粉專頭像可用 `graph.facebook.com/<粉專>/picture?type=large&width=720` 不登入取得（實測蔣萬安粉專頭像的照片編號與試算表原圖相同，可見試算表原本就取自官方粉專）。23 位全數改為下載後放在 `public/images/candidates/<拼音>.jpg`，不再連外部網址；網站推送後，把試算表照片欄改成 `/images/candidates/<拼音>.jpg`，照片欄仍是唯一來源，程式不另設對照表。三個代理分頭找粉專與官方照片，來源紀錄寫在 scratchpad `photos/result-{a,b,c}.json`，整理後記在下方。
+- 照片來源（2026-09-29 下載，裁成 320×320 正方形存 `public/images/candidates/`）：
+
+| 候選人 | 檔名 | 來源 | 來源網址 | 佐證 |
+| --- | --- | --- | --- | --- |
+| 沈伯洋 | shen-boyang.jpg | 官方粉專頭像 | https://www.facebook.com/puma.taipei/ | https://puma.taipei/ |
+| 蔣萬安 | jiang-wanan.jpg | 官方粉專頭像 | https://www.facebook.com/chiangwanan/ | https://zh.wikipedia.org/zh-tw/%E8%94%A3%E8%90%AC%E5%AE%89 |
+| 林志成 | lin-zhicheng.jpg | 沿用試算表原圖 | https://p.udn.com.tw/upf/news/2026/candidatephoto/b82.jpg | https://www.cna.com.tw/news/aipl/202609040292.aspx |
+| 唐新民 | tang-xinmin.jpg | 沿用試算表原圖 | https://p.udn.com.tw/upf/news/2026/candidatephoto/b70.jpg | https://zh.wikipedia.org/zh-tw/%E5%94%90%E6%96%B0%E6%B0%91 |
+| 郭璽 | guo-xi.jpg | 官方粉專頭像 | https://www.facebook.com/p/%E9%83%AD%E7%92%BD-61550495357919/ | https://zh.wikipedia.org/zh-tw/%E9%83%AD%E7%92%BD_(%E6%94%BF%E6%B2%BB%E4%BA%BA%E7%89%A9) |
+| 蕭文乾 | xiao-wenqian.jpg | 本人網站 | https://www.sor.world/wen | https://www.miparty.org/mp.aspx?id=74 |
+| 李四川 | li-sichuan.jpg | 官方粉專頭像 | https://www.facebook.com/p/%E6%9D%8E%E5%9B%9B%E5%B7%9DHammer-Lee-100051818071280/ | https://zh.wikipedia.org/zh-tw/%E6%9D%8E%E5%9B%9B%E5%B7%9D |
+| 蘇巧慧 | su-qiaohui.jpg | 官方粉專頭像 | https://www.facebook.com/chiaohui.su/ | https://zh.wikipedia.org/zh-tw/%E8%98%87%E5%B7%A7%E6%85%A7 |
+| 蘇輝湟 | su-huihuang.jpg | 個人 Facebook 帳號 | https://www.facebook.com/profile.php?id=100004296217783 | https://www.facebook.com/profile.php?id=100004296217783 |
+| 張善政 | zhang-shanzheng.jpg | 官方粉專頭像 | https://www.facebook.com/SanCheng624/ | https://zh.wikipedia.org/zh-tw/%E5%BC%B5%E5%96%84%E6%94%BF |
+| 黃世杰 | huang-shijie.jpg | 官方粉專頭像 | https://www.facebook.com/SCHuangLawyer/ | https://zh.wikipedia.org/zh-tw/%E9%BB%83%E4%B8%96%E6%9D%B0_(%E6%94%BF%E6%B2%BB%E4%BA%BA%E7%89%A9) |
+| 江啟臣 | jiang-qichen.jpg | 官方粉專頭像 | https://www.facebook.com/johnnyccchiang/ | https://zh.wikipedia.org/zh-tw/江啟臣 |
+| 何欣純 | he-xinchun.jpg | 官方粉專頭像 | https://www.facebook.com/94achun/ | https://zh.wikipedia.org/zh-tw/何欣純 |
+| 洪麗華 | hong-lihua.jpg | 沿用試算表原圖 | https://elections.olc.tw/media/5800f866/0688/44b8/8760/68256ab936af.jpg | https://elections.olc.tw/candidates/name/%E6%B4%AA%E9%BA%97%E8%8F%AF |
+| 陳亭妃 | chen-tingfei.jpg | 官方粉專頭像 | https://www.facebook.com/fififans | https://zh.wikipedia.org/zh-tw/陳亭妃 |
+| 謝龍介 | xie-longjie.jpg | 立法院委員照片 | https://www.ly.gov.tw/Images/Legislators/110104.jpg | https://zh.wikipedia.org/zh-tw/謝龍介 |
+| 葉人文 | ye-renwen.jpg | 官方粉專頭像 | https://www.facebook.com/TainanYesMan/ | https://tainanyesman.oen.tw/ |
+| 蕭燐洪 | xiao-linhong.jpg | 沿用試算表原圖 | https://images.chinatimes.com/newsphoto/2024-01-15/656/B23A00_P_05_02.jpg | https://www.miparty.org/Image_download_all_class.aspx?id=30 |
+| 柯志恩 | ke-zhien.jpg | 官方粉專頭像 | https://www.facebook.com/KoChihEn/ | https://zh.wikipedia.org/zh-tw/柯志恩 |
+| 賴瑞隆 | lai-ruilong.jpg | 官方粉專頭像 | https://www.facebook.com/zenolai2 | https://zh.wikipedia.org/zh-tw/賴瑞隆 |
+| 王肇民 | wang-zhaomin.jpg | 官方粉專頭像 | https://www.facebook.com/p/%E7%8E%8B%E8%82%87%E6%B0%91-Wang-Jau-Min-official-website-61557675072403/ | https://news.ltn.com.tw/news/politics/breakingnews/5561125 |
+| 洪方隆 | hong-fanglong.jpg | 沿用試算表原圖 | https://img.ltn.com.tw/Upload/news/600/2026/09/04/5563088_1_1.jpg | https://news.ltn.com.tw/news/Kaohsiung/breakingnews/5563088 |
+| 張靜 | zhang-jing.jpg | 個人 Facebook 帳號 | https://www.facebook.com/p/%E5%BC%B5%E9%9D%9C-100006888229303/ | https://www.storm.mg/article/4255012?page=1 |
+
+- 照片注意事項：謝龍介粉專頭像是印滿字的競選圖，改用立法院委員照片。蘇輝湟與張靜找不到粉專，用的是個人 Facebook 帳號的頭像，照片編號與同事原本選的相同；張靜的帳號只能靠律師事務所、住臺東等間接資訊對上候選人。林志成、唐新民、洪麗華、蕭燐洪、洪方隆沒有找到官方社群，沿用原圖：林志成、唐新民是聯合報選舉資料庫的照片，改抓 500×500 原圖。蘇輝湟與張靜另外指定裁切範圍，靠近臉部；直式照片從偏上方裁。
+- 同事自行換照片的說明寫進 `docs/apps-script-deploy.md`：照片欄可填網站內的 `/images/candidates/` 路徑，或完整網址；不要貼 `fbcdn.net`（約兩週過期），粉專頭像請貼 `graph.facebook.com/<粉專>/picture?type=large&width=720`，貼前先開新分頁確認。
