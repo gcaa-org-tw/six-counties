@@ -32,6 +32,7 @@ export interface PetitionPayload {
 }
 
 const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const CJK_SHORT_NAME = /^[㐀-鿿豈-﫿]{2,4}$/;
 
 export const PLACEHOLDER_MESSAGES: PetitionMessage[] = [
   { name: '林○安', message: '希望市長候選人把永續城市當成任期內就要交出成績的事。' },
@@ -59,9 +60,11 @@ export function validatePetition(p: PetitionPayload): string | null {
 
 export function maskName(name: string): string {
   const chars = Array.from(name);
-  if (chars.length < 2) return name;
-  chars[1] = '○';
-  return chars.join('');
+  if (CJK_SHORT_NAME.test(name)) {
+    chars[1] = '○';
+    return chars.join('');
+  }
+  return chars.map((c, i) => (i === 0 || /\s/.test(c) ? c : '○')).join('');
 }
 
 export async function submitPetition(payload: PetitionPayload): Promise<void> {

@@ -60,6 +60,16 @@ describe('maskName', () => {
   it('四字遮第二字', () => {
     expect(maskName('歐陽小明')).toBe('歐○小明');
   });
+
+  it('五字以上的中文名只留第一個字', () => {
+    expect(maskName('阿不都拉曼')).toBe('阿○○○○');
+  });
+
+  it('非中文或混合文字的名字只留第一個字，空白照留', () => {
+    expect(maskName('John Smith')).toBe('J○○○ ○○○○○');
+    expect(maskName('Amy')).toBe('A○○');
+    expect(maskName('王Amy')).toBe('王○○○');
+  });
 });
 
 describe('連署統計', () => {

@@ -1,8 +1,16 @@
 const SHEET_ID = 'PUT_SHEET_ID_HERE';
 const RESPONSE_SHEET = '表單回覆 1';
 const EXTRA_GROUP_SHEET = '團體補登';
+const CACHE_KEY = 'petition-stats';
+const CACHE_SECONDS = 300;
+const CACHE_MAX_BYTES = 100000;
+const CJK_SHORT_NAME = /^[㐀-鿿豈-﫿]{2,4}$/;
 
 function doGet() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get(CACHE_KEY);
+  if (cached) return json(cached);
+
   const ss = SpreadsheetApp.openById(SHEET_ID);
   const rows = ss.getSheetByName(RESPONSE_SHEET).getDataRange().getValues().slice(1);
 
@@ -27,13 +35,15 @@ function doGet() {
 
   const publicMessages = groupMessages.concat(individualMessages).slice(-30);
 
-  return json({
+  const payload = JSON.stringify({
     ok: true,
     individualCount: individuals.length,
     groupCount: groupNames.length,
     groupNames: groupNames,
     publicMessages: publicMessages
   });
+  if (Utilities.newBlob(payload).getBytes().length <= CACHE_MAX_BYTES) cache.put(CACHE_KEY, payload, CACHE_SECONDS);
+  return json(payload);
 }
 
 function agrees(value) {
@@ -71,7 +81,9 @@ function mergeGroupNames(formNames, extraNames) {
 function sameGroup(a, b) {
   const x = normalize(a);
   const y = normalize(b);
-  return x === y || x.indexOf(y) !== -1 || y.indexOf(x) !== -1;
+  if (x === y) return true;
+  if (Math.min(Array.from(x).length, Array.from(y).length) < 4) return false;
+  return x.indexOf(y) !== -1 || y.indexOf(x) !== -1;
 }
 
 function normalize(name) {
@@ -83,12 +95,14 @@ function text(value) {
 }
 
 function mask(name) {
-  const chars = name.split('');
-  if (chars.length < 2) return name;
-  chars[1] = '○';
-  return chars.join('');
+  const chars = Array.from(name);
+  if (CJK_SHORT_NAME.test(name)) {
+    chars[1] = '○';
+    return chars.join('');
+  }
+  return chars.map(function (c, i) { return i === 0 || /\s/.test(c) ? c : '○'; }).join('');
 }
 
-function json(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+function json(body) {
+  return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
 }
