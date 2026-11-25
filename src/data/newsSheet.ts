@@ -3,7 +3,7 @@ import type { GvizTable } from './gviz';
 import { fetchSheetTable, parseCheck } from './sheets';
 import { isHttpsUrl, safeImageUrl } from './url';
 
-const KINDS: NewsItem['kind'][] = ['新聞稿', '投書', '活動'];
+const KINDS: NewsItem['kind'][] = ['新聞稿', '投書', '活動', '文章'];
 
 function cell(row: string[], index: number): string {
   return (row[index] ?? '').trim();

@@ -1,6 +1,6 @@
 export interface NewsItem {
   date: string;
-  kind: '新聞稿' | '投書' | '活動';
+  kind: '新聞稿' | '投書' | '活動' | '文章';
   title: string;
   summary: string;
   href: string;

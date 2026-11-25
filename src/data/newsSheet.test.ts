@@ -94,8 +94,13 @@ describe('mapNewsRows', () => {
     expect(items.map((i) => i.href)).toEqual(['https://example.com/new', 'https://example.com/mid', 'https://example.com/old']);
   });
 
-  it('類別不在三種之內時視為新聞稿', () => {
+  it('類別不在四種之內時視為新聞稿', () => {
     const items = mapNewsRows(table([row({ 1: '其他' })]));
     expect(items[0].kind).toBe('新聞稿');
+  });
+
+  it('類別填「文章」時對應為文章', () => {
+    const items = mapNewsRows(table([row({ 1: '文章' })]));
+    expect(items[0].kind).toBe('文章');
   });
 });

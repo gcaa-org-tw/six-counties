@@ -54,7 +54,7 @@ function NewsCard({ item }: { item: NewsItem }) {
         <h3 className="mt-3 font-display text-lg leading-7 text-ink transition-colors group-hover:text-purple-deep">
           {item.title}
         </h3>
-        <p className="mt-2 text-sm leading-6 text-ink/70">{item.summary}</p>
+        <p className="mt-2 line-clamp-5 text-sm leading-6 text-ink/70">{item.summary}</p>
       </div>
     </a>
   );
