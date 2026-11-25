@@ -507,3 +507,16 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - 試算表：照片欄 X2:X24 改為 `/images/candidates/<拼音>.jpg`（原網址保留在 scratchpad `photos/candidates.tsv`）。寫入前核對 B 欄姓名與列號一致。
 - 公開站驗證（Playwright，1280px 與 390px）：23 張卡片、23 張照片皆從網站路徑載入成功、主控台無錯誤、無水平溢出、不含截止公告。截圖 `design/board-open/live-desktop.png`、`live-mobile.png`。
 - 待辦：同事修正試算表四列狀態矛盾（沈伯洋、蔣萬安、謝龍介、柯志恩，見上方），改完網站自動更新。
+
+## Phase 38 安全性強化（2026-11-25）
+- 範圍：依唯讀安全檢查的修正清單，在分支 `fix/security-hardening` 修改，未推送、未部署。
+- 版本庫：`.gitignore` 加入 `.playwright-mcp/` 與 `*.tsbuildinfo`；`.playwright-mcp/` 下三個檔案與 `tsconfig.tsbuildinfo` 停止追蹤，檔案留在磁碟上。根目錄 `sections.json` 沒有任何檔案引用，維持追蹤。
+- 網址檢查：新增 `src/data/url.ts`。最新消息的連結只接受 `https:` 網址；最新消息圖片與候選人照片只接受 `https:` 網址或 `/images/` 開頭的網站內路徑，其他值當成沒有圖，顯示灰色色塊或剪影。
+- 連署資料：`parsePetitionResponse` 檢查 `ok` 為 true、兩個人數為有限的非負數字、`groupNames` 與 `publicMessages` 為陣列，名單只留字串，意見只留姓名與內容都是字串的項目；結構不符時丟出錯誤，畫面顯示既有的錯誤狀態。Apps Script 與 gviz 的讀取加上 10 秒逾時。
+- GitHub Actions：工作流程層級只給 `contents: read`，`pages: write` 與 `id-token: write` 只給 deploy 工作。
+- 套件：vite 6.4.3 升到 6.4.6，vitest 2.1.9 升到 4.1.12，測試設定不需修改。本機 npm 11.4.2 與 npm 10 解析 vitest 4 的相依時出錯（`Cannot read properties of null (reading 'edgesOut')`），鎖定檔改用 npm 11.21.3 產生；npm 10.9.2 與 11.4.2 的 `npm ci` 都能照這份鎖定檔安裝。
+- `npm audit`：修改前 7 項（中度 3、高度 2、嚴重 2），修改後 1 項高度（`source-map-js` 1.2.1，經由 postcss 與 @tailwindcss/node 引入，未處理）；`npm audit --omit=dev` 修改前後皆為 0。
+- `index.html` 加上 Content-Security-Policy meta 標籤；建置後的 `dist/index.html` 沒有行內 script 或 style，政策不需調整。
+- `apps-script/Code.gs`：回應內容用 `CacheService` 暫存 300 秒，超過 100,000 位元組時不暫存；`mask()` 改為 2 到 4 個字的中文姓名遮第二個字，其他姓名只留第一個字、其餘非空白字元換成「○」；`sameGroup()` 的包含比對只在較短名稱至少 4 個字時適用。`src/data/petition.ts` 的 `maskName` 同步改成相同規則。`docs/apps-script-deploy.md` 補上 5 分鐘延遲、4 個字門檻與遮蔽規則。
+- `apps-script/Code.gs` 的修改要等有人重新部署 Apps Script 後才會生效。
+- 驗證（2026-11-25）：`npm ci`、`tsc -b`、vitest 14 檔 93 項、`npm run build` 通過。`Code.gs` 以 Node 模擬 Google 服務執行：遮蔽、團體比對、暫存命中、超過上限不暫存、回應欄位順序皆符合預期。本機 preview 以 Playwright（Chromium）在 1280px 與 390px 載入真實試算表與 Apps Script：CSP 違規 0 筆、主控台訊息 0 筆、失敗請求 0 筆；23 張候選人照片全部載入；最新消息 2 張卡片圖片載入；團體連署「共 23 個」、意見跑馬燈運作；Noto Sans TC 載入；首頁進場動畫跑完、計數為 14 位與 23 個；無水平溢出。另以行內 script 測試，確認政策有生效（被擋下並記錄違規）。
