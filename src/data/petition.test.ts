@@ -90,4 +90,36 @@ describe('連署統計', () => {
   it('回應非 ok 時視為讀取失敗', () => {
     expect(() => parsePetitionResponse({ ok: false })).toThrow('讀取連署資料失敗');
   });
+
+  it('人數不是有限的非負數字、名單或意見不是陣列時視為讀取失敗', () => {
+    const valid = { ok: true, individualCount: 1, groupCount: 1, groupNames: ['甲'], publicMessages: [] };
+    expect(() => parsePetitionResponse({ ...valid, ok: 'true' })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, individualCount: '7' })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, individualCount: -1 })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, groupCount: Number.NaN })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, groupCount: Number.POSITIVE_INFINITY })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, individualCount: undefined })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, groupNames: '甲' })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, groupNames: undefined })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, publicMessages: { name: '甲', message: '乙' } })).toThrow('讀取連署資料失敗');
+    expect(() => parsePetitionResponse({ ...valid, publicMessages: null })).toThrow('讀取連署資料失敗');
+  });
+
+  it('名單只留字串，意見只留姓名與內容都是字串的項目', () => {
+    const stats = parsePetitionResponse({
+      ok: true,
+      individualCount: 3,
+      groupCount: 2,
+      groupNames: ['甲', 7, null, { name: '乙' }, '丙'],
+      publicMessages: [
+        { name: '王○明', message: '保留' },
+        { name: 1, message: '姓名不是字串' },
+        { name: '李○華' },
+        null,
+        '字串',
+      ],
+    });
+    expect(stats.groupNames).toEqual(['甲', '丙']);
+    expect(stats.publicMessages).toEqual([{ name: '王○明', message: '保留' }]);
+  });
 });

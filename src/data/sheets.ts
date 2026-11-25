@@ -2,6 +2,7 @@ import { SHEET_ID, gvizUrl } from './config';
 import { parseGvizTable, type GvizTable } from './gviz';
 import { DEMO_CANDIDATES } from './demo';
 import type { Candidate, SignStatus } from './types';
+import { safeImageUrl } from './url';
 
 const CHECK_START = 4;
 const CHECK_END = 22;
@@ -44,7 +45,7 @@ export function mapCandidateRow(row: string[]): Candidate {
     status: parseStatus(cell(row, 3)),
     checks,
     signedDate: formatSignedDate(cell(row, 22)),
-    photoUrl: cell(row, 23),
+    photoUrl: safeImageUrl(cell(row, 23)),
     isDemo: false,
   };
 }
@@ -55,7 +56,7 @@ export function mapCandidateRows(rows: string[][]): Candidate[] {
 }
 
 export async function fetchSheetTable(sheetName: string): Promise<GvizTable> {
-  const res = await fetch(gvizUrl(sheetName));
+  const res = await fetch(gvizUrl(sheetName), { signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error(`讀取「${sheetName}」失敗（HTTP ${res.status}）`);
   return parseGvizTable(await res.text());
 }

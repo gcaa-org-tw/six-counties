@@ -1,6 +1,7 @@
 import type { NewsItem } from '../content/news';
 import type { GvizTable } from './gviz';
 import { fetchSheetTable, parseCheck } from './sheets';
+import { isHttpsUrl, safeImageUrl } from './url';
 
 const KINDS: NewsItem['kind'][] = ['新聞稿', '投書', '活動'];
 
@@ -19,7 +20,7 @@ function parseKind(raw: string): NewsItem['kind'] {
 }
 
 function mapNewsRow(row: string[]): NewsItem {
-  const image = cell(row, 5);
+  const image = safeImageUrl(cell(row, 5));
   return {
     date: normaliseDate(cell(row, 0)),
     kind: parseKind(cell(row, 1)),
@@ -38,7 +39,7 @@ function newsBody({ cols, rows }: GvizTable): string[][] {
 
 export function mapNewsRows(table: GvizTable): NewsItem[] {
   return newsBody(table)
-    .filter((row) => parseCheck(cell(row, 7)) && cell(row, 2) !== '' && cell(row, 4).startsWith('http'))
+    .filter((row) => parseCheck(cell(row, 7)) && cell(row, 2) !== '' && isHttpsUrl(cell(row, 4)))
     .map(mapNewsRow)
     .sort((a, b) => b.date.localeCompare(a.date));
 }

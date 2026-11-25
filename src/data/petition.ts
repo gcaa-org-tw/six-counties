@@ -14,11 +14,11 @@ export interface PetitionStats {
 }
 
 export interface PetitionResponse {
-  ok?: boolean;
-  individualCount?: number;
-  groupCount?: number;
-  groupNames?: string[];
-  publicMessages?: PetitionMessage[];
+  ok?: unknown;
+  individualCount?: unknown;
+  groupCount?: unknown;
+  groupNames?: unknown;
+  publicMessages?: unknown;
 }
 
 export interface PetitionPayload {
@@ -79,13 +79,25 @@ export async function submitPetition(payload: PetitionPayload): Promise<void> {
   if (data.ok !== true) throw new Error('送出失敗');
 }
 
+function isCount(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
+function isMessage(value: unknown): value is PetitionMessage {
+  if (typeof value !== 'object' || value === null) return false;
+  const { name, message } = value as Record<string, unknown>;
+  return typeof name === 'string' && typeof message === 'string';
+}
+
 export function parsePetitionResponse(data: PetitionResponse): PetitionStats {
   if (data.ok !== true) throw new Error('讀取連署資料失敗');
-  const groupNames = data.groupNames ?? [];
-  const publicMessages = data.publicMessages ?? [];
+  if (!isCount(data.individualCount) || !isCount(data.groupCount)) throw new Error('讀取連署資料失敗');
+  if (!Array.isArray(data.groupNames) || !Array.isArray(data.publicMessages)) throw new Error('讀取連署資料失敗');
+  const groupNames = data.groupNames.filter((name: unknown): name is string => typeof name === 'string');
+  const publicMessages = data.publicMessages.filter(isMessage);
   return {
-    individualCount: data.individualCount ?? 0,
-    groupCount: data.groupCount ?? groupNames.length,
+    individualCount: data.individualCount,
+    groupCount: data.groupCount,
     groupNames,
     publicMessages: publicMessages.length > 0 ? publicMessages : PLACEHOLDER_MESSAGES,
   };
@@ -93,7 +105,7 @@ export function parsePetitionResponse(data: PetitionResponse): PetitionStats {
 
 export async function fetchPetitionStats(): Promise<PetitionStats> {
   if (APPS_SCRIPT_URL === '') return FALLBACK_PETITION_STATS;
-  const res = await fetch(APPS_SCRIPT_URL);
+  const res = await fetch(APPS_SCRIPT_URL, { signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error('讀取連署資料失敗');
   return parsePetitionResponse((await res.json()) as PetitionResponse);
 }

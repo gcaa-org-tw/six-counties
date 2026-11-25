@@ -60,16 +60,29 @@ describe('mapNewsRows', () => {
     expect(items[1].imageAlt).toBeUndefined();
   });
 
-  it('只保留「顯示」有勾、有標題、連結是 http 開頭的列', () => {
+  it('只保留「顯示」有勾、有標題、連結是 https 網址的列', () => {
     const items = mapNewsRows(table([
       row({ 7: 'FALSE' }),
       row({ 7: '' }),
       row({ 2: '', 7: 'TRUE' }),
       row({ 4: '', 7: 'TRUE' }),
       row({ 4: 'javascript:alert(1)', 7: 'TRUE' }),
+      row({ 4: 'data:text/html,<script>alert(1)</script>', 7: 'TRUE' }),
+      row({ 4: 'http://example.com/plain', 7: 'TRUE' }),
       row({ 4: 'https://example.com/kept', 7: 'TRUE' }),
     ]));
     expect(items.map((i) => i.href)).toEqual(['https://example.com/kept']);
+  });
+
+  it('圖片網址不是 https 或網站內 /images/ 路徑時，當成沒有圖片', () => {
+    const items = mapNewsRows(table([
+      row({ 0: '2026/8/15', 5: '/images/news/a.webp', 6: '合照' }),
+      row({ 0: '2026/8/14', 5: 'http://example.com/a.jpg', 6: '合照' }),
+      row({ 0: '2026/8/13', 5: 'javascript:alert(1)', 6: '合照' }),
+      row({ 0: '2026/8/12', 5: 'data:image/svg+xml,<svg></svg>', 6: '合照' }),
+    ]));
+    expect(items.map((i) => i.image)).toEqual(['/images/news/a.webp', undefined, undefined, undefined]);
+    expect(items[1].imageAlt).toBeUndefined();
   });
 
   it('依日期新到舊排序', () => {

@@ -48,7 +48,7 @@ describe('parseCheck', () => {
 
 describe('mapCandidateRow', () => {
   it('欄位對應與 18 項勾選', () => {
-    const mapped = mapCandidateRow(row({ 4: '1', 6: '是', 21: 'TRUE', 22: '2026-09-20', 23: 'photo.jpg' }));
+    const mapped = mapCandidateRow(row({ 4: '1', 6: '是', 21: 'TRUE', 22: '2026-09-20', 23: '/images/candidates/photo.jpg' }));
     expect(mapped.city).toBe('臺北市');
     expect(mapped.name).toBe('示意候選人（甲）');
     expect(mapped.party).toBe('示意政黨Ａ');
@@ -59,8 +59,15 @@ describe('mapCandidateRow', () => {
     expect(mapped.checks[17]).toBe(true);
     expect(mapped.checks[1]).toBe(false);
     expect(mapped.signedDate).toBe('2026 年 9 月 20 日');
-    expect(mapped.photoUrl).toBe('photo.jpg');
+    expect(mapped.photoUrl).toBe('/images/candidates/photo.jpg');
     expect(mapped.isDemo).toBe(false);
+  });
+
+  it('照片欄只接受 https 網址或網站內 /images/ 路徑，其他當成沒有照片', () => {
+    expect(mapCandidateRow(row({ 23: 'https://example.com/a.jpg' })).photoUrl).toBe('https://example.com/a.jpg');
+    expect(mapCandidateRow(row({ 23: 'http://example.com/a.jpg' })).photoUrl).toBe('');
+    expect(mapCandidateRow(row({ 23: 'javascript:alert(1)' })).photoUrl).toBe('');
+    expect(mapCandidateRow(row({ 23: 'data:image/png;base64,AAAA' })).photoUrl).toBe('');
   });
 });
 
