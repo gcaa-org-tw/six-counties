@@ -520,3 +520,20 @@ Slogan:「面對城市的下一個十年，六都市長準備好了嗎？」
 - `apps-script/Code.gs`：回應內容用 `CacheService` 暫存 300 秒，超過 100,000 位元組時不暫存；`mask()` 改為 2 到 4 個字的中文姓名遮第二個字，其他姓名只留第一個字、其餘非空白字元換成「○」；`sameGroup()` 的包含比對只在較短名稱至少 4 個字時適用。`src/data/petition.ts` 的 `maskName` 同步改成相同規則。`docs/apps-script-deploy.md` 補上 5 分鐘延遲、4 個字門檻與遮蔽規則。
 - `apps-script/Code.gs` 的修改要等有人重新部署 Apps Script 後才會生效。
 - 驗證（2026-11-25）：`npm ci`、`tsc -b`、vitest 14 檔 93 項、`npm run build` 通過。`Code.gs` 以 Node 模擬 Google 服務執行：遮蔽、團體比對、暫存命中、超過上限不暫存、回應欄位順序皆符合預期。本機 preview 以 Playwright（Chromium）在 1280px 與 390px 載入真實試算表與 Apps Script：CSP 違規 0 筆、主控台訊息 0 筆、失敗請求 0 筆；23 張候選人照片全部載入；最新消息 2 張卡片圖片載入；團體連署「共 23 個」、意見跑馬燈運作；Noto Sans TC 載入；首頁進場動畫跑完、計數為 14 位與 23 個；無水平溢出。另以行內 script 測試，確認政策有生效（被擋下並記錄違規）。
+- 最新消息類別新增「文章」（`src/content/news.ts`、`src/data/newsSheet.ts`、`src/content/newsMock.ts`），其他值仍當成新聞稿；新增對應的單元測試。
+- 摘要上限改為 200 字（試算表端的驗證規則由 Joseph 設定），卡片摘要加上 `line-clamp-5`，超過 5 行以「…」結尾。
+- 5 行可容納的全形中文字數（Playwright，開發模式 `?news=3` 與 `?news=6`，暫時取消行數限制後量測）：
+
+| 視窗寬度 | 3 則以內（格狀） | 超過 3 則（輪播） |
+| --- | --- | --- |
+| 360 | 85 | 70 |
+| 390 | 95 | 80 |
+| 640 | 75 | 75 |
+| 768 | 100 | 100 |
+| 1024 | 85 | 85 |
+| 1280 | 95 | 95 |
+| 1440 | 95 | 95 |
+
+- 新增圖片 `public/images/news/20261124-tcan-policy-review.webp`（960×720，43,030 位元組）；preview 中 `/images/news/20261124-tcan-policy-review.webp` 回 200、`image/webp`；`https://six-cities.gcaa.org.tw/images/news/20261124-tcan-policy-review.webp` 通過圖片網址檢查（單元測試）。
+- `docs/apps-script-deploy.md`：類別列出四種；摘要 200 字以內、試算表拒絕更長的文字、卡片顯示前 5 行（約 70 到 100 字）並以「…」結尾、必須讓讀者看到的內容寫在摘要開頭；連結與圖片網址須以 `https://` 開頭；候選人照片網址段落同步改寫。
+- 驗證（2026-11-25）：`tsc -b`、vitest 14 檔 94 項、`npm run build` 通過。本機 preview 以 Playwright 在 1280px 與 390px 載入真實試算表：CSP 違規 0 筆、主控台訊息 0 筆、失敗請求 0 筆、無水平溢出。2026-10-12 那一列摘要現為 72 字，顯示 4 行、未截斷；2026-08-12 那一列 96 字，1280px 截在第 5 行並以「…」結尾，390px 完整顯示 5 行。1280px 同一列兩張卡片高度皆為 537px；390px 為單欄排列。
